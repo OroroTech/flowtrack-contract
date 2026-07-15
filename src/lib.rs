@@ -4,7 +4,7 @@ mod errors;
 mod storage;
 mod types;
 
-use soroban_sdk::{contract, contractimpl, symbol_short, Env};
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env};
 
 pub use errors::ContractError;
 pub use types::{DisbursementSchedule, Recipient};
@@ -50,5 +50,9 @@ impl DisbursementTrackerContract {
         );
 
         Ok(())
+    }
+
+    pub fn get_recipient(env: Env, address: Address) -> Result<Recipient, ContractError> {
+        storage::get_recipient(&env, &address)
     }
 }
