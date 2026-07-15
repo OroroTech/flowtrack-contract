@@ -2,6 +2,8 @@
 
 mod errors;
 mod storage;
+#[cfg(test)]
+mod test;
 mod types;
 
 use soroban_sdk::{contract, contractimpl, Address, Env};
