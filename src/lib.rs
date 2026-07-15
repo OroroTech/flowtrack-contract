@@ -4,10 +4,10 @@ mod errors;
 mod storage;
 mod types;
 
-use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env};
+use soroban_sdk::{contract, contractimpl, Address, Env};
 
 pub use errors::ContractError;
-pub use types::{DisbursementSchedule, Recipient};
+pub use types::{DisbursementSchedule, DisbursementScheduled, Recipient, RecipientEnrolled};
 
 #[contract]
 pub struct DisbursementTrackerContract;
@@ -24,10 +24,11 @@ impl DisbursementTrackerContract {
 
         storage::save_recipient(&env, &recipient);
 
-        env.events().publish(
-            (symbol_short!("enrolled"), recipient.address.clone()),
-            recipient.enrolled_at,
-        );
+        RecipientEnrolled {
+            recipient: recipient.address.clone(),
+            enrolled_at: recipient.enrolled_at,
+        }
+        .publish(&env);
 
         Ok(())
     }
@@ -44,10 +45,11 @@ impl DisbursementTrackerContract {
 
         storage::save_schedule(&env, &schedule);
 
-        env.events().publish(
-            (symbol_short!("scheduled"), schedule.recipient.clone()),
-            schedule.amount,
-        );
+        DisbursementScheduled {
+            recipient: schedule.recipient.clone(),
+            amount: schedule.amount,
+        }
+        .publish(&env);
 
         Ok(())
     }
