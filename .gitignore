@@ -1,3 +1,5 @@
 /target
 .soroban
 /test_snapshots
+.claude
+claude.md
