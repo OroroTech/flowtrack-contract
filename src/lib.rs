@@ -31,4 +31,24 @@ impl DisbursementTrackerContract {
 
         Ok(())
     }
+
+    pub fn schedule_disbursement(
+        env: Env,
+        schedule: DisbursementSchedule,
+    ) -> Result<(), ContractError> {
+        storage::get_recipient(&env, &schedule.recipient)?;
+
+        if schedule.amount <= 0 {
+            return Err(ContractError::InvalidAmount);
+        }
+
+        storage::save_schedule(&env, &schedule);
+
+        env.events().publish(
+            (symbol_short!("scheduled"), schedule.recipient.clone()),
+            schedule.amount,
+        );
+
+        Ok(())
+    }
 }
