@@ -55,4 +55,8 @@ impl DisbursementTrackerContract {
     pub fn get_recipient(env: Env, address: Address) -> Result<Recipient, ContractError> {
         storage::get_recipient(&env, &address)
     }
+
+    pub fn get_schedule(env: Env, address: Address) -> Result<DisbursementSchedule, ContractError> {
+        storage::get_schedule(&env, &address)
+    }
 }
